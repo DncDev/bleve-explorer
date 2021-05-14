@@ -17,18 +17,20 @@ import (
 	"io"
 	"log"
 	"net/http"
-
 	"github.com/gorilla/mux"
 )
 
 func staticFileRouter(r *mux.Router, static http.Handler) *mux.Router {
 	// static
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/",
-		myFileHandler{static}))
+	//r.PathPrefix("/static/").Handler(http.StripPrefix("/static/",myFileHandler{static}))
+	r.PathPrefix("/static/").Handler(myFileHandler{static})
+	
+		
 	// bootstrap ui insists on loading templates from this path
-	r.PathPrefix("/template/").Handler(http.StripPrefix("/template/",
-		myFileHandler{static}))
-
+	//r.PathPrefix("/template/").Handler(http.StripPrefix("/template/",myFileHandler{static}))
+	
+		// bootstrap ui insists on loading templates from this path
+	r.PathPrefix("/template/").Handler(myFileHandler{static})
 	// application pages
 	appPages := []string{
 		"/overview",
@@ -40,7 +42,7 @@ func staticFileRouter(r *mux.Router, static http.Handler) *mux.Router {
 
 	for _, p := range appPages {
 		// if you try to use index.html it will redirect...poorly
-		r.PathPrefix(p).Handler(RewriteURL("/", static))
+		r.PathPrefix(p).Handler(RewriteURL("/static/", static))
 	}
 
 	r.Handle("/", http.RedirectHandler("/static/index.html", 302))

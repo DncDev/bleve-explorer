@@ -21,7 +21,7 @@ config(['$routeProvider', '$locationProvider', function($routeProvider, $locatio
   $routeProvider.when('/indexes/:indexName/:tabName', {templateUrl: '/static/partials/index/index.html', controller: 'IndexCtrl'});
   $routeProvider.when('/monitor/', {templateUrl: '/static/partials/monitor.html', controller: 'MonitorCtrl'});
   $routeProvider.otherwise({redirectTo: '/indexes'});
-  $locationProvider.html5Mode(true);
+  $locationProvider.html5Mode(true,false);
 }]).run(function($rootScope){
   //Just add a reference to some utility methods in rootscope.
   $rootScope.Utils = {

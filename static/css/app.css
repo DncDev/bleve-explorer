@@ -12,6 +12,8 @@
 	font-family: fixed;
 }
 
+.container {width:90%}
+
 .overide-brand {
   float: left;
   height: 50px;

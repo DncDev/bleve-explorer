@@ -15,26 +15,26 @@ import (
 	"log"
 	"net/http"
 	"os"
-
 	"github.com/gorilla/mux"
-
 	"github.com/blevesearch/bleve/v2"
 	bleveMappingUI "github.com/blevesearch/bleve-mapping-ui"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
-
 	// import general purpose configuration
 	_ "github.com/blevesearch/bleve/v2/config"
+	"embed"
 )
+
+//go:embed static/*
+var staticfs embed.FS
 
 var bindAddr = flag.String("addr", ":8095", "http listen address")
 var dataDir = flag.String("dataDir", "data", "data directory")
 var staticEtag = flag.String("staticEtag", "", "optional static etag value.")
-var staticPath = flag.String("static", "",
-	"optional path to static directory for web resources")
-var staticBleveMappingPath = flag.String("staticBleveMapping", "",
-	"optional path to static-bleve-mapping directory for web resources")
+var staticPath = flag.String("static", "","optional path to static directory for web resources")
+var staticBleveMappingPath = flag.String("staticBleveMapping", "","optional path to static-bleve-mapping directory for web resources")
 
 func main() {
+    
 	flag.Parse()
 
 	// walk the data dir and register index names
@@ -72,22 +72,20 @@ func main() {
 	if *staticBleveMappingPath != "" {
 		fi, err := os.Stat(*staticBleveMappingPath)
 		if err == nil && fi.IsDir() {
-			log.Printf("using static-bleve-mapping resources from %s",
-				*staticBleveMappingPath)
+			log.Printf("using static-bleve-mapping resources from %s",*staticBleveMappingPath)
 			staticBleveMapping = http.FileServer(http.Dir(*staticBleveMappingPath))
 		}
 	}
 
-	router.PathPrefix("/static-bleve-mapping/").
-		Handler(http.StripPrefix("/static-bleve-mapping/", staticBleveMapping))
+	router.PathPrefix("/static-bleve-mapping/").Handler(http.StripPrefix("/static-bleve-mapping/", staticBleveMapping))
 
 	// default to bindata for static resources.
-	static := http.FileServer(assetFS())
+	static := http.FileServer(http.FS(staticfs))
+	
 	if *staticPath != "" {
 		fi, err := os.Stat(*staticPath)
 		if err == nil && fi.IsDir() {
-			log.Printf("using static resources from %s",
-				*staticPath)
+			log.Printf("using static resources from %s",*staticPath)
 			static = http.FileServer(http.Dir(*staticPath))
 		}
 	}
