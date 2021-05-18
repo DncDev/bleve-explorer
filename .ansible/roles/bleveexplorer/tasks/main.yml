@@ -11,6 +11,11 @@
   file:
     path: "/etc/bleveexplorer"
     state: "directory"
+    
+- name: Create var lib data dir
+  file:
+    path: "/var/lib/bleveexplorer"
+    state: "directory"
 
 - name: Create systemd unit file
   template:
