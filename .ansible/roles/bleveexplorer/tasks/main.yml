@@ -17,6 +17,25 @@
     path: "/var/lib/bleveexplorer"
     state: "directory"
 
+- name: Creates path entry crontab
+  cron:
+    name: PATH
+    env: yes
+    job: /usr/local/bin
+    cron_file: bleveexplorer
+    user: root
+ 
+- name: Creates a cron entry for netbox script
+  cron:
+    name: Allow wiping of "default" index 
+    weekday: "*/7"
+    minute: "0"
+    hour: "0"
+    user: "root"
+    job: "curl -X DELETE http://127.0.0.1:8095/api/default &&  curl -X PUT http://127.0.0.1:8095/api/default"
+    cron_file: bleveexplorer
+
+
 - name: Create systemd unit file
   template:
     src:  "bleveexplorer-systemd.j2"
