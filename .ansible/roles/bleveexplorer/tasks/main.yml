@@ -3,7 +3,7 @@
 
 - name: Copy server binary
   copy:
-    src: "{{ playbook_dir }}/repos/bleveexplorer/bin/bleveexplorer"
+    src: "{{ playbook_dir }}/repos/bleveexplorer/bin/bleve-explorer"
     dest: "/usr/local/bin/"
     mode: "0755"
 
