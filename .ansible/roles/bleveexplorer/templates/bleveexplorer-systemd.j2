@@ -1,0 +1,17 @@
+[Unit]
+Description=Flexlog Service
+After=network.target
+
+[Service]
+Type=simple
+# Another Type option: forking
+User=gofeed
+ExecStart=/usr/local/bin/flexlog
+Restart=always
+RestartSec=90
+StartLimitInterval=0
+StartLimitBurst=3
+# Other Restart options: or always, on-abort, etc
+
+[Install]
+WantedBy=multi-user.target
